@@ -1,3 +1,4 @@
+; -*- mode: turing -*-
 ; http://morphett.info/turing/turing.html
 ; Converts a number from binary to decimal.
 ; It does this by successively incrementing the decimal counter and decrementing the binary input until 0 is reached.
