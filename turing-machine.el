@@ -22,11 +22,8 @@
 
 ;;; Define turing machine.
 (defface turing-current-face
-  `((t (:foreground "#282828" :background "#FDF4C1" :height 200)))
+  `((t (:foreground ,(face-attribute 'default :background) :background ,(face-attribute 'default :foreground) :height 200)))
   "WAT")
-;; (defface turing-current-face
-;;   `((t (:inherit 'default :inverse-video t :height 200)))
-;;   "WAT")
 
 (defface turing-tape-face
   `((t (:height 200)))
