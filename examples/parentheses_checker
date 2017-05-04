@@ -1,4 +1,6 @@
 ; -*- mode: turing -*-
+;; INITIAL: (emacs-turing-machine)
+;; RATE: .025
 ; http://morphett.info/turing/turing.html
 ; This program checks if the parentheses '(', ')' in a string are balanced.
 ; Input: a string containing ( and ) but no blanks or '!'

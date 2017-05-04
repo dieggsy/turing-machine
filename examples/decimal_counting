@@ -1,8 +1,10 @@
 ; -*- mode: turing -*-
-0 _ _ l 10
+;; INITIAL: 0
+;; RATE: .25
+0 _ _ l 10 ; move all the way to the ones place, not changing anything
 0 * * r 0
 
-10 0 1 * 10
+10 0 1 * 10 ; this takes care of increasing numbers 9 and below
 10 1 2 * 10
 10 2 3 * 10
 10 3 4 * 10
@@ -13,7 +15,7 @@
 10 8 9 * 10
 10 9 0 l 20
 
-20 0 1 r 0
+20 0 1 r 0 ; this takes care of carry over
 20 _ 1 r 0
 20 1 2 r 0
 20 2 3 r 0
