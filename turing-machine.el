@@ -107,7 +107,7 @@
                 ((string= action "r")
                  (setq place (1+ place))
                  (when (= place (length tape)) ; Handle moving past end.
-                   (setq tape (append '("_") tape)))))
+                   (setq tape (append tape '("_"))))))
 
           ;; Update the current state/key/wild
           (setq state new-state)
