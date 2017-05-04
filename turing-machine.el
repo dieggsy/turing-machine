@@ -4,63 +4,60 @@
 (require 'cl)
 
 ;;; Define mode
-(defvar turing-mode-map
+(defvar turing-machine-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-c C-c") #'turing-execute)
+    (define-key map (kbd "C-c C-c") #'turing-machine-execute)
     map))
 
-(defvar turing-highlights '((";.*" . font-lock-comment-face)
-                            ("^[^ ]+ [^ ]+" . font-lock-keyword-face)))
+(defvar turing-machine-highlights '((";.*" . font-lock-comment-face)
+                                    ("^[^ ]+ [^ ]+" . font-lock-keyword-face)))
 
-(define-derived-mode turing-mode prog-mode "turing"
+(define-derived-mode turing-machine-mode prog-mode "turing"
   "Major mode for editing turing machine code."
-  (setq font-lock-defaults '(turing-highlights))
-  (setq comment-start ";"))
-
-(add-hook 'turing-mode-hook (lambda () (highlight-numbers-mode -1)))
-
+  (setq font-lock-defaults '(turing-machine-highlights))
+  (setq comment-start ";")
+  (when (featurep 'highlight-numbers)
+    (highlight-numbers-mode -1)))
 
 ;;; Define turing machine.
-(defface turing-current-face
+(defface turing-machine-current-face
   `((t (:foreground ,(face-attribute 'default :background) :background ,(face-attribute 'default :foreground) :height 200)))
   "WAT")
 
-(defface turing-tape-face
+(defface turing-machine-tape-face
   `((t (:height 200)))
   "WOT")
 
 ;; Set up an empty hash table of commands
-(defvar turing--commands (make-hash-table :test #'equal))
+(defvar turing-machine--commands (make-hash-table :test #'equal))
 
-(defun turing--buffer-to-hash ()
+(defun turing-machine--buffer-to-hash ()
   "Parse the current buffer into a hash table of cammands."
   (interactive)
   ;; Clear the table first.
-  (clrhash turing--commands)
+  (clrhash turing-machine--commands)
   (let* ((file-string (buffer-substring-no-properties (point-min) (point-max)))
-         (file-lines (-remove #'turing--invalid-line (split-string file-string "\n")))
-         (command-list (mapcar #'turing--line-to-command file-lines)))
+         (file-lines (-remove #'turing-machine--invalid-line (split-string file-string "\n")))
+         (command-list (mapcar #'turing-machine--line-to-command file-lines)))
     (dolist (command command-list)
-      (puthash (car command) (cadr command) turing--commands))
-    turing--commands))
+      (puthash (car command) (cadr command) turing-machine--commands))
+    turing-machine--commands))
 
-(defun turing--invalid-line (line)
+(defun turing-machine--invalid-line (line)
   "Strip all comment lines."
   (or (string-empty-p line) (s-prefix? ";" (string-trim line))))
 
-(defun turing--line-to-command (line)
+(defun turing-machine--line-to-command (line)
   "Turn each line into a grouped list like: `((a b) (c d e))'."
   (let ((elems (split-string (string-trim (car (split-string line ";"))) " ")))
     (list (reverse (nthcdr 3 (reverse elems))) (nthcdr 2 elems))))
 
-;; (defun turing--find-val)
-
-(defun turing-execute ()
+(defun turing-machine-execute ()
   "Run the turing machine."
   (interactive)
   (save-excursion
     (goto-char (point-min))
-    (let* ((commands (turing--buffer-to-hash))
+    (let* ((commands (turing-machine--buffer-to-hash))
            (tape (-remove #'string-empty-p
                           (split-string
                            (concat
@@ -116,23 +113,21 @@
              (get-buffer-create "*turing-machine*")
              nil
              nil
-             ;; (setf (nth place tape-viz)
-             ;;       (propertize (nth place tape-viz) 'face 'turing-current-face))
              (erase-buffer)
              (insert
               (concat
                (propertize
                 (string-join (-slice tape-viz 0 place))
                 'face
-                'turing-tape-face)
+                'turing-machine-tape-face)
                (propertize
                 (nth place tape-viz)
                 'face
-                'turing-current-face)
+                'turing-machine-current-face)
                (propertize
                 (string-join (-slice tape-viz (1+ place) (length tape-viz)))
                 'face
-                'turing-tape-face)))))))
+                'turing-machine-tape-face)))))))
       (if(not (s-prefix? "halt" (car key)))
           (message "No rule for state '%s' and char '%s'" state (nth place tape))
         (message "Done!")))))
