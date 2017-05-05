@@ -7,7 +7,7 @@
 ;; Created: 2017-05-04
 ;; Version: 0.1.0
 ;; Keywords:
-;; Package-Requires: ((emacs "24.4") (dash "2.11.0") (s "1.10.0") (cl-lib "0.6.1"))
+;; Package-Requires: ((emacs "24.4") (cl-lib "0.6.1"))
 
 ;; This file is not part of GNU Emacs.
 
@@ -33,9 +33,7 @@
 
 
 ;;; Code:
-(require 'dash)
-(require 's)
-(require 'cl)
+(require 'cl-lib)
 
 (defvar turing-machine-mode-map
   (let ((map (make-sparse-keymap)))
@@ -79,8 +77,8 @@
   ;; Clear the table first.
   (clrhash turing-machine--commands)
   (let* ((file-string (buffer-substring-no-properties (point-min) (point-max)))
-         (file-lines (-remove #'turing-machine--invalid-line
-                              (split-string file-string "\n")))
+         (file-lines (cl-remove-if #'turing-machine--invalid-line
+                                   (split-string file-string "\n")))
          (command-list (mapcar #'turing-machine--line-to-command file-lines)))
     (dolist (command command-list)
       (puthash (car command) (cadr command) turing-machine--commands))
@@ -88,7 +86,7 @@
 
 (defun turing-machine--invalid-line (line)
   "Check if LINE is empty or a comment."
-  (or (string-empty-p line) (s-prefix? ";" (string-trim line))))
+  (or (string-empty-p line) (string-prefix-p ";" (string-trim line))))
 
 (defun turing-machine--line-to-command (line)
   "Turn LINE into a grouped list like: `((a b) (c d e))'."
@@ -102,16 +100,12 @@
   (save-excursion
     (goto-char (point-min))
     (let* ((commands (turing-machine--buffer-to-hash))
-           (tape (-remove #'string-empty-p
-                          (split-string
-                           (concat
-                            "_"
-                            (string-trim
-                             (or (progn (search-forward-regexp ";; INITIAL:\\(.*\\)" nil t)
-                                        (match-string-no-properties 1))
-                                 "0"))
-                            "_")
-                           "")))
+           (initial (string-trim
+                     (or (progn (search-forward-regexp ";; INITIAL:\\(.*\\)" nil t)
+                                (match-string-no-properties 1))
+                         "0")))
+           (tape (cl-remove-if #'string-empty-p
+                               (split-string (format "_%s_" initial) "")))
            (rate (string-to-number
                   (string-trim
                    (or (progn (search-forward-regexp ";; RATE:\\(.*\\)" nil t)
@@ -124,14 +118,15 @@
       ;; If we still have a command associated with key
       (while (and (or (gethash key commands)
                       (gethash wild-key commands))
-                  (not (s-prefix? "halt" (car key))))
+                  (not (string-prefix-p "halt" (car key))))
         ;; Update rate
         (redisplay t)
         (sleep-for rate)
         ;; Get things to do from hash table
-        (cl-multiple-value-bind (new-char action new-state) (if (gethash key commands)
-                                                                (gethash key commands)
-                                                              (gethash wild-key commands))
+        (cl-multiple-value-bind (new-char action new-state)
+            (if (gethash key commands)
+                (gethash key commands)
+              (gethash wild-key commands))
           ;; Update the tape accordingly
           (setf (nth place tape)
                 (if (not (string= new-char "*"))
@@ -161,7 +156,7 @@
              (insert
               (concat
                (propertize
-                (string-join (-slice tape-viz 0 place))
+                (string-join (cl-subseq tape-viz 0 place))
                 'face
                 'turing-machine-tape-face)
                (propertize
@@ -169,10 +164,10 @@
                 'face
                 'turing-machine-current-face)
                (propertize
-                (string-join (-slice tape-viz (1+ place) (length tape-viz)))
+                (string-join (cl-subseq tape-viz (1+ place) (length tape-viz)))
                 'face
                 'turing-machine-tape-face)))))))
-      (if (not (s-prefix? "halt" (car key)))
+      (if (not (string-prefix-p "halt" (car key)))
           (message "No rule for state '%s' and char '%s'" state (nth place tape))
         (message "Done!")))))
 
