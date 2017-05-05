@@ -5,7 +5,7 @@
 ;; URL: http://github.com/therockmandolinist/turing-machine
 ;; Git-Repository: git://github.com/therockmandolinist/turing-machine
 ;; Created: 2017-05-04
-;; Version: 0.1.1
+;; Version: 0.1.2
 ;; Keywords: turing machine simulation
 ;; Package-Requires: ((emacs "24.4") (cl-lib "0.6.1"))
 
@@ -51,7 +51,7 @@
   (when (featurep 'highlight-numbers)
     (highlight-numbers-mode -1)))
 
-(defvar turing-machine-mode-hook '(turing-machine--convenience))
+(setq turing-machine-mode-hook '(turing-machine--convenience))
 
 (defun turing-machine--convenience ()
   "Turn off modes that interfere."
