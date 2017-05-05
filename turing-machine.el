@@ -1,9 +1,42 @@
-;; -*- lexical-binding: t; -*- ;
+;;; turing-machine.el --- Turing machine simulator -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2017 Diego A. Mundo
+;; Author: Diego A. Mundo <diegoamundo@gmail.com>
+;; URL: http://github.com/therockmandolinist/turing-machine
+;; Git-Repository: git://github.com/therockmandolinist/turing-machine
+;; Created: 2017-05-04
+;; Version: 0.1.0
+;; Keywords:
+;; Package-Requires: ((emacs "24.4"))
+
+;; This file is not part of GNU Emacs.
+
+;; This program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+;;; Commentary:
+
+;; This package provides an implementation of
+;; http://morphett.info/turing/turing.html (a turing machine simulator) in
+;; Emacs.
+
+
+;;; Code:
 (require 'dash)
 (require 's)
 (require 'cl)
 
-;;; Define mode
 (defvar turing-machine-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-c C-c") #'turing-machine-execute)
@@ -12,21 +45,28 @@
 (defvar turing-machine-highlights '((";.*" . font-lock-comment-face)
                                     ("^[^ ]+ [^ ]+" . font-lock-keyword-face)))
 
-(define-derived-mode turing-machine-mode prog-mode "turing"
+(define-derived-mode turing-machine-mode prog-mode "turing machine"
   "Major mode for editing turing machine code."
   (setq font-lock-defaults '(turing-machine-highlights))
   (setq comment-start ";")
   (when (featurep 'highlight-numbers)
     (highlight-numbers-mode -1)))
 
+(defvar turing-machine-mode-hook '(turing-machine--convenience))
+
+(defun turing-machine--convenience ()
+  "Turn off modes that interfere."
+  (when (featurep 'highlight-numbers)
+    (highlight-numbers-mode -1)))
+
 ;;; Define turing machine.
 (defface turing-machine-current-face
   `((t (:foreground ,(face-attribute 'default :background) :background ,(face-attribute 'default :foreground) :height 200)))
-  "WAT")
+  "Face of current place in turing machine tape.")
 
 (defface turing-machine-tape-face
   `((t (:height 200)))
-  "WOT")
+  "Face of displayed tape.")
 
 ;; Set up an empty hash table of commands
 (defvar turing-machine--commands (make-hash-table :test #'equal))
@@ -44,11 +84,11 @@
     turing-machine--commands))
 
 (defun turing-machine--invalid-line (line)
-  "Strip all comment lines."
+  "Check if LINE is empty or a comment."
   (or (string-empty-p line) (s-prefix? ";" (string-trim line))))
 
 (defun turing-machine--line-to-command (line)
-  "Turn each line into a grouped list like: `((a b) (c d e))'."
+  "Turn LINE into a grouped list like: `((a b) (c d e))'."
   (let ((elems (split-string (string-trim (car (split-string line ";"))) " ")))
     (list (reverse (nthcdr 3 (reverse elems))) (nthcdr 2 elems))))
 
@@ -128,8 +168,10 @@
                 (string-join (-slice tape-viz (1+ place) (length tape-viz)))
                 'face
                 'turing-machine-tape-face)))))))
-      (if(not (s-prefix? "halt" (car key)))
+      (if (not (s-prefix? "halt" (car key)))
           (message "No rule for state '%s' and char '%s'" state (nth place tape))
         (message "Done!")))))
 
-;; INITIAL: 1111
+(provide 'turing-machine)
+
+;;; turing-machine.el ends here
