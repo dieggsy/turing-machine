@@ -7,7 +7,7 @@
 ;; Created: 2017-05-04
 ;; Version: 0.1.0
 ;; Keywords:
-;; Package-Requires: ((emacs "24.4"))
+;; Package-Requires: ((emacs "24.4") (dash "2.11.0") (s "1.10.0") (cl-lib "0.6.1"))
 
 ;; This file is not part of GNU Emacs.
 
@@ -45,6 +45,7 @@
 (defvar turing-machine-highlights '((";.*" . font-lock-comment-face)
                                     ("^[^ ]+ [^ ]+" . font-lock-keyword-face)))
 
+;;;###autoload
 (define-derived-mode turing-machine-mode prog-mode "turing machine"
   "Major mode for editing turing machine code."
   (setq font-lock-defaults '(turing-machine-highlights))
@@ -57,7 +58,9 @@
 (defun turing-machine--convenience ()
   "Turn off modes that interfere."
   (when (featurep 'highlight-numbers)
-    (highlight-numbers-mode -1)))
+    (highlight-numbers-mode -1))
+  (when (featurep 'rainbow-delimiters)
+    (rainbow-delimiters-mode -1)))
 
 ;;; Define turing machine.
 (defface turing-machine-current-face
@@ -73,11 +76,11 @@
 
 (defun turing-machine--buffer-to-hash ()
   "Parse the current buffer into a hash table of cammands."
-  (interactive)
   ;; Clear the table first.
   (clrhash turing-machine--commands)
   (let* ((file-string (buffer-substring-no-properties (point-min) (point-max)))
-         (file-lines (-remove #'turing-machine--invalid-line (split-string file-string "\n")))
+         (file-lines (-remove #'turing-machine--invalid-line
+                              (split-string file-string "\n")))
          (command-list (mapcar #'turing-machine--line-to-command file-lines)))
     (dolist (command command-list)
       (puthash (car command) (cadr command) turing-machine--commands))
@@ -92,6 +95,7 @@
   (let ((elems (split-string (string-trim (car (split-string line ";"))) " ")))
     (list (reverse (nthcdr 3 (reverse elems))) (nthcdr 2 elems))))
 
+;;;###autoload
 (defun turing-machine-execute ()
   "Run the turing machine."
   (interactive)
