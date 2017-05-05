@@ -2,7 +2,7 @@
 [[https://www.gnu.org/licenses/gpl-3.0.txt][file:https://img.shields.io/badge/license-GPL_3-green.svg]]
 
 Implementation of a single tape turing machine simulator in emacs-lisp and
-python.
+python (separately).
 
 Inspired by http://morphett.info/turing/turing.html
 
@@ -27,6 +27,7 @@ Also:
    - You can specify the starting position for the head using ~*~ in the initial input.
 #+end_quote
 *** Python
+Write a file with the syntax above, and pass it to the script as indicated below.
 #+begin_example
 Usage:
   turing_machine.py FILENAME INITIAL
@@ -37,9 +38,11 @@ Options:
   -r --rate  specify delay rate
 #+end_example
 *** Emacs
+ - Write a file/buffer with the syntax described above, and run
+   ~turing-machine-execute~ to run the simulator.
  - Add ~-*- mode: turing-machine -*-~ to the top of the file to automatically
    start in ~turing-machine-mode~ when you next open the file.
- - Press ~C-c C-c~ to start the machine.
+ - In ~turing-machine-mode~ you can press ~C-c C-c~ to start the machine.
  - Within the code file, you can use ~;; INITIAL: [Some initial state]~ to denote
    the initial state and ~;; RATE: [some number]~ to denote the run/update rate
    in seconds.
@@ -71,3 +74,4 @@ turing-machine:
    Improvements welcome.
  - Get rid of cursor in ~*turing-machine*~ buffer.
  - Allow for spaces in place of/in addition to underscores.
+ - File extension?
