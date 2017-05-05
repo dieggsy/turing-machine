@@ -1,6 +1,6 @@
 ; -*- mode: turing -*-
 ;; INITIAL: 0
-;; RATE: .25
+;; RATE: .1
 0 _ _ l 10 ; move all the way to the ones place, not changing anything
 0 * * r 0
 

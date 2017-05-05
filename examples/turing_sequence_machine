@@ -1,4 +1,4 @@
-; -*- mode: turing -*-
+; -*- mode: turing-machine -*-
 ; http://morphett.info/turing/turing.html
 ; This is a translation of a program given by Alan Turing in his 1936
 ; paper 'On computable numbers, with an application to the Entscheidungsproblem'

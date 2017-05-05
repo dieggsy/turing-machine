@@ -1,4 +1,4 @@
-; -*- mode: turing -*-
+; -*- mode: turing-machine -*-
 ; http://morphett.info/turing/turing.html
 ; This is a simple stack language interpreter.
 ; It evaluates Boolean expressions entered in reverse Polish notation.

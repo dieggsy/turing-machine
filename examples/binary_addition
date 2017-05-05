@@ -1,4 +1,4 @@
-; -*- mode: turing -*-
+; -*- mode: turing-machine -*-
 ; http://morphett.info/turing/turing.html
 ; Binary addition - adds two binary numbers
 ; Input: two binary numbers, separated by a single space, eg '100 1110'

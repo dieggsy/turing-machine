@@ -1,4 +1,4 @@
-; -*- mode: turing -*-
+; -*- mode: turing-machine -*-
 ; http://morphett.info/turing/turing.html
 ; ----------------------------------------------------------------
 ; A Universal Turing Machine
