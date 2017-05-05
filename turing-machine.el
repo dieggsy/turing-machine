@@ -1,4 +1,4 @@
-;;; turing-machine.el --- Turing machine simulator -*- lexical-binding: t; -*-
+;;; turing-machine.el --- Single-tape Turing machine simulator -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2017 Diego A. Mundo
 ;; Author: Diego A. Mundo <diegoamundo@gmail.com>
@@ -6,7 +6,7 @@
 ;; Git-Repository: git://github.com/therockmandolinist/turing-machine
 ;; Created: 2017-05-04
 ;; Version: 0.1.0
-;; Keywords:
+;; Keywords: turing machine simulation
 ;; Package-Requires: ((emacs "24.4") (cl-lib "0.6.1"))
 
 ;; This file is not part of GNU Emacs.
