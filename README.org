@@ -29,7 +29,9 @@ Also:
 The [[./exmaples]] directory should contain relevant examples. Source should be
 listed near the top when not my own.
 *** Python
-Write a file with the syntax above, and pass it to the script as indicated below.
+Write a file with the syntax above, and pass it to the script as indicated
+below. This is in Python 3. It should be pretty trivial to implement in
+python 2.
 #+begin_example
 Usage:
   turing_machine.py FILENAME INITIAL
