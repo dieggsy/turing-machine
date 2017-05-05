@@ -1,0 +1,70 @@
+* turing-machine
+[[https://www.gnu.org/licenses/gpl-3.0.txt][file:https://img.shields.io/badge/license-GPL_3-green.svg]]
+
+Implementations of http://morphett.info/turing/turing.html in python and emacs.
+
+** Usage
+*** Syntax
+The syntax for turing code is described in the link above, but for redundancy:
+#+begin_quote
+Syntax:
+
+   - Each line should contain one tuple of the form ~<current state> <current symbol> <new symbol> <direction> <new state>~.
+   - You can use any number or word for ~<current state>~ and ~<new state>~, eg. ~10~, ~a~, ~state1~. State labels are case-sensitive.
+   - You can use any character for ~<current symbol>~ and ~<new symbol>~, or ~_~ to represent blank (space). Symbols are case-sensitive.
+   - ~<direction>~ should be ~l~, ~r~ or ~*~, denoting 'move left', 'move right' or 'do not move', respectively.
+   - Anything after a ~;~ is a comment and is ignored.
+   - The machine halts when it reaches any state starting with ~halt~, eg. ~halt~, ~halt-accept~.
+
+Also:
+
+   - ~*~ can be used as a wildcard in ~<current symbol>~ or ~<current state>~ to match any character or state.
+   - ~*~ can be used in ~<new symbol>~ or ~<new state>~ to mean 'no change'.
+   - ~!~ can be used at the end of a line to set a breakpoint, eg ~1 a b r 2 !~. The machine will automatically pause after executing this line.
+   - You can specify the starting position for the head using ~*~ in the initial input.
+#+end_quote
+*** Python
+#+begin_example
+Usage:
+  turing_machine.py FILENAME INITIAL
+  turing_machine.py FILENAME INITIAL [-r|--rate] [RATE]
+
+Options:
+  -h --help
+  -r --rate  specify delay rate
+#+end_example
+*** Emacs
+ - Add ~-*- mode: turing-machine -*-~ to the top of the file to automatically
+   start in ~turing-machine-mode~ when you next open the file.
+ - Press ~C-c C-c~ to start the machine.
+ - Within the code file, you can use ~;; INITIAL: [Some initial state]~ to denote
+   the initial state and ~;; RATE: [some number]~ to denote the run/update rate
+   in seconds.
+** Emacs Installation
+Using [[https://github.com/quelpa/quelpa-use-package][quelpa-use-package]]:
+#+begin_src emacs-lisp
+(use-package turing-machine
+  :quelpa (turing-machine
+           :fetcher github
+           :repo "therockmandolinist/turing-machine"))
+#+end_src
+
+Or [[https://github.com/quelpa/quelpa][quelpa]]:
+#+begin_src emacs-lisp
+(quelpa '(hacker-typer
+          :fetcher github
+          :repo "therockmandolinist/turing-machine"))
+#+end_src
+
+Otherwise, download the files to somewhere on your load path, and enable
+turing-machine:
+#+begin_src emacs-lisp
+(require 'turing-machine)
+#+end_src
+
+** Todo
+ - Better syntax highlighting.
+ - Potentially better elisp in general, this feels a bit hackish.
+   Improvements welcome.
+ - Get rid of cursor in ~*turing-machine*~ buffer.
+ - Allow for spaces in input as well as "_"
