@@ -26,7 +26,7 @@ Also:
    - ~!~ can be used at the end of a line to set a breakpoint, eg ~1 a b r 2 !~. The machine will automatically pause after executing this line.
    - You can specify the starting position for the head using ~*~ in the initial input.
 #+end_quote
-The [[./exmaples]] directory should contain relevant examples. Source should be
+The [[./examples]] directory should contain relevant examples. Source should be
 listed near the top when not my own.
 *** Python
 Write a file with the syntax above, and pass it to the script as indicated
