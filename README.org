@@ -1,7 +1,10 @@
 * turing-machine
 [[https://www.gnu.org/licenses/gpl-3.0.txt][file:https://img.shields.io/badge/license-GPL_3-green.svg]]
 
-Implementations of http://morphett.info/turing/turing.html in python and emacs.
+Implementation of a single tape turing machine simulator in emacs-lisp and
+python.
+
+Inspired by http://morphett.info/turing/turing.html
 
 ** Usage
 *** Syntax
@@ -67,4 +70,4 @@ turing-machine:
  - Potentially better elisp in general, this feels a bit hackish.
    Improvements welcome.
  - Get rid of cursor in ~*turing-machine*~ buffer.
- - Allow for spaces in input as well as "_"
+ - Allow for spaces in place of/in addition to underscores.
