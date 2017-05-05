@@ -5,7 +5,7 @@
 ;; URL: http://github.com/therockmandolinist/turing-machine
 ;; Git-Repository: git://github.com/therockmandolinist/turing-machine
 ;; Created: 2017-05-04
-;; Version: 0.1.0
+;; Version: 0.1.1
 ;; Keywords: turing machine simulation
 ;; Package-Requires: ((emacs "24.4") (cl-lib "0.6.1"))
 
@@ -63,11 +63,13 @@
 ;;; Define turing machine.
 (defface turing-machine-current-face
   `((t (:foreground ,(face-attribute 'default :background) :background ,(face-attribute 'default :foreground) :height 200)))
-  "Face of current place in turing machine tape.")
+  "Face of current place in turing machine tape."
+  :group 'turing-machine)
 
 (defface turing-machine-tape-face
   `((t (:height 200)))
-  "Face of displayed tape.")
+  "Face of displayed tape."
+  :group 'turing-machine)
 
 ;; Set up an empty hash table of commands
 (defvar turing-machine--commands (make-hash-table :test #'equal))
