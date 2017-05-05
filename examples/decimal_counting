@@ -1,4 +1,4 @@
-; -*- mode: turing -*-
+; -*- mode: turing-machine -*-
 ;; INITIAL: 0
 ;; RATE: .1
 0 _ _ l 10 ; move all the way to the ones place, not changing anything
