@@ -135,12 +135,12 @@
                     new-char
                   (nth place tape)))
           (cond ((string= action "l")
-                 (setq place (1- place))
+                 (cl-decf place)
                  (when (= place -1) ; Handle moving past beginning.
                    (push "_" tape)
                    (setq place 0)))
                 ((string= action "r")
-                 (setq place (1+ place))
+                 (cl-incf place)
                  (when (= place (length tape)) ; Handle moving past end.
                    (setq tape (append tape '("_"))))))
 
