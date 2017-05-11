@@ -1,4 +1,6 @@
 * turing-machine
+[[https://melpa.org/#/turing-machine][file:https://melpa.org/packages/turing-machine-badge.svg]]
+[[https://stable.melpa.org/#/turing-machine][file:https://stable.melpa.org/packages/turing-machine-badge.svg]]
 [[https://www.gnu.org/licenses/gpl-3.0.txt][file:https://img.shields.io/badge/license-GPL_3-green.svg]]
 
 Implementation of a single tape turing machine simulator in emacs-lisp and
@@ -51,6 +53,12 @@ Options:
    the initial state and ~;; RATE: [some number]~ to denote the run/update rate
    in seconds.
 ** Emacs Installation
+This package is on Melpa. To install using [[https://github.com/jwiegley/use-package][use-package]]:
+#+begin_src emacs-lisp
+(use-package turing-machine
+  :ensure t)
+#+end_src
+
 Using [[https://github.com/quelpa/quelpa-use-package][quelpa-use-package]]:
 #+begin_src emacs-lisp
 (use-package turing-machine
