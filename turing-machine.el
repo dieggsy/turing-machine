@@ -71,6 +71,11 @@
   "Face of displayed tape."
   :group 'turing-machine)
 
+(defcustom turing-machine-visual-spaces t
+  "Whether to visualize spaces with an underscore"
+  :group 'turing-machine
+  :type 'boolean)
+
 ;; Set up an empty hash table of commands
 (defvar turing-machine--commands (make-hash-table :test #'equal))
 
@@ -153,26 +158,30 @@
           (setq key (list state (nth place tape)))
           (setq wild-key (list state "*"))
           ;; Make visualization
-          (let ((tape-viz (copy-tree tape)))
+          (let* ((tape-viz (copy-tree tape))
+                 (tape-string
+                  (concat (propertize
+                           (string-join (cl-subseq tape-viz 0 place))
+                           'face
+                           'turing-machine-tape-face)
+                          (propertize
+                           (nth place tape-viz)
+                           'face
+                           'turing-machine-current-face)
+                          (propertize
+                           (string-join (cl-subseq tape-viz
+                                                   (1+ place)
+                                                   (length tape-viz)))
+                           'face
+                           'turing-machine-tape-face))))
             (with-current-buffer-window
              (get-buffer-create "*turing-machine*")
              nil
              nil
              (erase-buffer)
-             (insert
-              (concat
-               (propertize
-                (string-join (cl-subseq tape-viz 0 place))
-                'face
-                'turing-machine-tape-face)
-               (propertize
-                (nth place tape-viz)
-                'face
-                'turing-machine-current-face)
-               (propertize
-                (string-join (cl-subseq tape-viz (1+ place) (length tape-viz)))
-                'face
-                'turing-machine-tape-face)))))))
+             (if turing-machine-visual-spaces
+                 (insert tape-string)
+               (insert (replace-regexp-in-string "_" " " tape-string)))))))
       (if (not (string-prefix-p "halt" (car key)))
           (message "No rule for state '%s' and char '%s'" state (nth place tape))
         (message "Done!")))))
