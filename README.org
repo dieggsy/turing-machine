@@ -50,8 +50,12 @@ Options:
    start in ~turing-machine-mode~ when you next open the file.
  - In ~turing-machine-mode~ you can press ~C-c C-c~ to start the machine.
  - Within the code file, you can use ~;; INITIAL: [Some initial state]~ to denote
-   the initial state and ~;; RATE: [some number]~ to denote the run/update rate
+   the initial state and ~;; RATE: [some number]~ to denote the update rate
    in seconds.
+ - Spaces are allowed in initial input, but surrounding spaces are trimmed. You
+   can be explicit with ~_~.
+ - You can choose to hide visualization of spaces with an underscore by setting
+   ~turing-machine-visual-spaces~ to ~nil~.
 ** Emacs Installation
 This package is on Melpa. To install using [[https://github.com/jwiegley/use-package][use-package]]:
 #+begin_src emacs-lisp

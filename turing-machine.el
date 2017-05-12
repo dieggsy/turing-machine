@@ -5,7 +5,7 @@
 ;; URL: http://github.com/therockmandolinist/turing-machine
 ;; Git-Repository: git://github.com/therockmandolinist/turing-machine
 ;; Created: 2017-05-04
-;; Version: 0.1.3
+;; Version: 0.1.4
 ;; Keywords: turing machine simulation
 ;; Package-Requires: ((emacs "24.4") (cl-lib "0.6.1"))
 
