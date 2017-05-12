@@ -95,6 +95,12 @@
   (let ((elems (split-string (string-trim (car (split-string line ";"))) " ")))
     (list (reverse (nthcdr 3 (reverse elems))) (nthcdr 2 elems))))
 
+(defun turing-machine--get-value (search)
+  (string-trim
+   (or (progn (search-forward-regexp search nil t)
+              (match-string-no-properties 1))
+       "0")))
+
 ;;;###autoload
 (defun turing-machine-execute ()
   "Run the turing machine."
@@ -102,17 +108,14 @@
   (save-excursion
     (goto-char (point-min))
     (let* ((commands (turing-machine--buffer-to-hash))
-           (initial (string-trim
-                     (or (progn (search-forward-regexp ";; INITIAL:\\(.*\\)" nil t)
-                                (match-string-no-properties 1))
-                         "0")))
+           (initial (replace-regexp-in-string
+                     " "
+                     "_"
+                     (turing-machine--get-value "; INITIAL:\\(.*\\)")))
            (tape (cl-remove-if #'string-empty-p
                                (split-string (format "_%s_" initial) "")))
            (rate (string-to-number
-                  (string-trim
-                   (or (progn (search-forward-regexp ";; RATE:\\(.*\\)" nil t)
-                              (match-string-no-properties 1))
-                       "0"))))
+                  (turing-machine--get-value "; RATE:\\(.*\\)")))
            (place 1)
            (state "0")
            (key (list "0" (cadr tape)))
