@@ -86,8 +86,5 @@ turing-machine:
 
 ** Todo
  - Better syntax highlighting.
- - Potentially better elisp in general, this feels a bit hackish.
-   Improvements welcome.
  - Get rid of cursor in ~*turing-machine*~ buffer.
- - Allow for spaces in place of/in addition to underscores.
- - File extension?
+ - File extension
