@@ -124,25 +124,26 @@
         ;; Update rate
         (redisplay t)
         (sleep-for rate)
+
         ;; Get things to do from hash table
         (cl-multiple-value-bind (new-char action new-state)
             (if (gethash key commands)
                 (gethash key commands)
               (gethash wild-key commands))
           ;; Update the tape accordingly
-          (setf (nth place tape)
-                (if (not (string= new-char "*"))
-                    new-char
-                  (nth place tape)))
+          (when (not (string= new-char "*"))
+            (setf (nth place tape) new-char))
+
+          ;; Handle edges
           (cond ((string= action "l")
                  (cl-decf place)
-                 (when (= place -1) ; Handle moving past beginning.
+                 (when (= place -1) ; Moving past beginning.
                    (push "_" tape)
                    (setq place 0)))
                 ((string= action "r")
                  (cl-incf place)
-                 (when (= place (length tape)) ; Handle moving past end.
-                   (setq tape (append tape '("_"))))))
+                 (when (= place (length tape)) ; Moving past end.
+                   (setq tape (append tape (list "_"))))))
 
           ;; Update the current state/key/wild
           (setq state new-state)
