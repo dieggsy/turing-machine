@@ -36,6 +36,23 @@
 (require 'cl-lib)
 (eval-when-compile (require 'subr-x))
 
+(defface turing-machine-current-face
+  `((t (:foreground ,(face-attribute 'default :background)
+        :background ,(face-attribute 'default :foreground)
+        :height 200)))
+  "Face of current place in turing machine tape."
+  :group 'turing-machine)
+
+(defface turing-machine-tape-face
+  `((t (:height 200)))
+  "Face of displayed tape."
+  :group 'turing-machine)
+
+(defcustom turing-machine-visual-spaces t
+  "Visualize spaces with an underscore."
+  :group 'turing-machine
+  :type 'boolean)
+
 (defvar turing-machine-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-c C-c") #'turing-machine-execute)
@@ -62,21 +79,6 @@
     (rainbow-delimiters-mode -1)))
 
 ;;; Define turing machine.
-(defface turing-machine-current-face
-  `((t (:foreground ,(face-attribute 'default :background) :background ,(face-attribute 'default :foreground) :height 200)))
-  "Face of current place in turing machine tape."
-  :group 'turing-machine)
-
-(defface turing-machine-tape-face
-  `((t (:height 200)))
-  "Face of displayed tape."
-  :group 'turing-machine)
-
-(defcustom turing-machine-visual-spaces t
-  "Whether to visualize spaces with an underscore"
-  :group 'turing-machine
-  :type 'boolean)
-
 ;; Set up an empty hash table of commands
 (defvar turing-machine--commands (make-hash-table :test #'equal))
 
