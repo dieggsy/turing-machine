@@ -5,7 +5,7 @@
 ;; URL: http://github.com/therockmandolinist/turing-machine
 ;; Git-Repository: git://github.com/therockmandolinist/turing-machine
 ;; Created: 2017-05-04
-;; Version: 0.1.4
+;; Version: 0.2.0
 ;; Keywords: turing machine simulation
 ;; Package-Requires: ((emacs "24.4"))
 
@@ -58,8 +58,9 @@
     (define-key map (kbd "C-c C-c") #'turing-machine-execute)
     map))
 
-(defvar turing-machine-highlights '((";.*" . font-lock-comment-face)
-                                    ("^[^ ]+ [^ ]+" . font-lock-keyword-face)))
+(defvar turing-machine-highlights
+  '((";.*" . font-lock-comment-face)
+    ("^[^ ]+ [^ ]+" . font-lock-keyword-face)))
 
 ;;;###autoload
 (define-derived-mode turing-machine-mode prog-mode "turing machine"
@@ -72,7 +73,7 @@
 (setq turing-machine-mode-hook '(turing-machine--convenience))
 
 (defun turing-machine--convenience ()
-  "Turn off modes that interfere."
+  "Turn off modes that may interfere."
   (when (featurep 'highlight-numbers)
     (highlight-numbers-mode -1))
   (when (featurep 'rainbow-delimiters)
