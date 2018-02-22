@@ -31,11 +31,19 @@ class TuringMachine(object):
             lines = map(lambda x: x.split(';')[0].strip().split(' '), lines)
             return dict([(tuple(i[:2]),tuple(i[2:])) for i in lines])
 
+    def visualize(self, tape, place):
+        tape_viz = copy.deepcopy(tape)
+        tape_viz[place] = f'\033[7m{tape_viz[self.place]}\033[0m'
+        print(''.join(tape_viz), end=('\r'
+                                      if not self.key[0].startswith("halt")
+                                      else ' '))
     def run(self):
         """Run the turing machine."""
         while (self.key in self.commands
                or self.wild_key in self.commands
                and not self.key[0].startswith("halt")):
+            # Visualize initial state
+            self.visualize(self.tape, self.place)
             # Update rate
             time.sleep(self.rate)
             # Get things to do from hash table
@@ -62,11 +70,7 @@ class TuringMachine(object):
             self.wild_key = (self.state, '*')
 
             # Make visualization
-            tape_viz = copy.deepcopy(self.tape)
-            tape_viz[self.place] = f'\033[7m{tape_viz[self.place]}\033[0m'
-            print(''.join(tape_viz), end=('\r'
-                                          if not self.key[0].startswith("halt")
-                                          else ' '))
+            self.visualize(self.tape, self.place)
         else:
             if not self.key[0].startswith("halt"):
                 print(f"No rule for state '{self.state}' "

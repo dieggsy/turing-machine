@@ -108,6 +108,31 @@
    (or (progn (search-forward-regexp search nil t)
               (match-string-no-properties 1))
        "0")))
+(defun turing-machine--display-tape (tape place)
+  "Display turing machine according to current TAPE and PLACE."
+  (let* ((tape-string
+          (concat (propertize
+                   (string-join (cl-subseq tape 0 place))
+                   'face
+                   'turing-machine-tape-face)
+                  (propertize
+                   (nth place tape)
+                   'face
+                   'turing-machine-current-face)
+                  (propertize
+                   (string-join (cl-subseq tape
+                                           (1+ place)
+                                           (length tape)))
+                   'face
+                   'turing-machine-tape-face))))
+    (with-current-buffer-window
+     (get-buffer-create "*turing-machine*")
+     nil
+     nil
+     (erase-buffer)
+     (if turing-machine-visual-spaces
+         (insert tape-string)
+       (insert (replace-regexp-in-string "_" " " tape-string))))))
 
 ;;;###autoload
 (defun turing-machine-execute ()
@@ -128,6 +153,8 @@
            (state "0")
            (key (list "0" (cadr tape)))
            (wild-key (list state "*")))
+      ;; Visualize initial state
+      (turing-machine--display-tape tape place)
       ;; If we still have a command associated with key
       (while (and (or (gethash key commands)
                       (gethash wild-key commands))
@@ -160,31 +187,8 @@
           (setq state new-state)
           (setq key (list state (nth place tape)))
           (setq wild-key (list state "*"))
-          ;; Make visualization
-          (let* ((tape-viz (copy-tree tape))
-                 (tape-string
-                  (concat (propertize
-                           (string-join (cl-subseq tape-viz 0 place))
-                           'face
-                           'turing-machine-tape-face)
-                          (propertize
-                           (nth place tape-viz)
-                           'face
-                           'turing-machine-current-face)
-                          (propertize
-                           (string-join (cl-subseq tape-viz
-                                                   (1+ place)
-                                                   (length tape-viz)))
-                           'face
-                           'turing-machine-tape-face))))
-            (with-current-buffer-window
-             (get-buffer-create "*turing-machine*")
-             nil
-             nil
-             (erase-buffer)
-             (if turing-machine-visual-spaces
-                 (insert tape-string)
-               (insert (replace-regexp-in-string "_" " " tape-string)))))))
+          ;; Visualize new state
+          (turing-machine--display-tape tape place)))
       (if (not (string-prefix-p "halt" (car key)))
           (message "No rule for state '%s' and char '%s'" state (nth place tape))
         (message "Done!")))))
