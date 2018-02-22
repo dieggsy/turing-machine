@@ -82,6 +82,15 @@
 ;; Set up an empty hash table of commands
 (defvar turing-machine--commands (make-hash-table :test #'equal))
 
+(defun turing-machine--invalid-line (line)
+  "Check if LINE is empty or a comment."
+  (or (string-empty-p line) (string-prefix-p ";" (string-trim line))))
+
+(defun turing-machine--line-to-command (line)
+  "Turn LINE into a grouped list like: `((a b) (c d e))'."
+  (let ((elems (split-string (string-trim (car (split-string line ";"))) " ")))
+    (list (reverse (nthcdr 3 (reverse elems))) (nthcdr 2 elems))))
+
 (defun turing-machine--buffer-to-hash ()
   "Parse the current buffer into a hash table of cammands."
   ;; Clear the table first.
@@ -94,20 +103,17 @@
       (puthash (car command) (cadr command) turing-machine--commands))
     turing-machine--commands))
 
-(defun turing-machine--invalid-line (line)
-  "Check if LINE is empty or a comment."
-  (or (string-empty-p line) (string-prefix-p ";" (string-trim line))))
+(defun turing-machine--get-value (key)
+  "Get value of keyword KEY from turing code comments.
 
-(defun turing-machine--line-to-command (line)
-  "Turn LINE into a grouped list like: `((a b) (c d e))'."
-  (let ((elems (split-string (string-trim (car (split-string line ";"))) " ")))
-    (list (reverse (nthcdr 3 (reverse elems))) (nthcdr 2 elems))))
+KEY must be in a comment with format ; KEY: VALUE."
+  (goto-char (point-min))
+  (let ((val (and (search-forward-regexp
+                   (rx-to-string `(: "; " ,key ":" (? " ") (group (+ nonl))))
+                   nil t)
+                  (match-string-no-properties 1))))
+    val))
 
-(defun turing-machine--get-value (search)
-  (string-trim
-   (or (progn (search-forward-regexp search nil t)
-              (match-string-no-properties 1))
-       "0")))
 (defun turing-machine--display-tape (tape place)
   "Display turing machine according to current TAPE and PLACE."
   (let* ((tape-string
@@ -135,20 +141,33 @@
        (insert (replace-regexp-in-string "_" " " tape-string))))))
 
 ;;;###autoload
-(defun turing-machine-execute ()
-  "Run the turing machine."
-  (interactive)
+(defun turing-machine-execute (&optional arg)
+  "Run the turing machine.
+
+Initial state will come from a comment like:
+
+  ;; INITIAL: 11_11
+
+in the code buffer. If no such comment exists, a minibuffer
+prompt will ask for the initial state. With prefix argument ARG,
+always prompt for initial state."
+  (interactive "p")
   (save-excursion
-    (goto-char (point-min))
     (let* ((commands (turing-machine--buffer-to-hash))
-           (initial (replace-regexp-in-string
-                     " "
-                     "_"
-                     (turing-machine--get-value "; INITIAL:\\(.*\\)")))
+           (initial (let ((initial (turing-machine--get-value "INITIAL")))
+                      (replace-regexp-in-string
+                       " "
+                       "-"
+                       (or (and (= arg 1) initial)
+                           (read-string "Set initial state: ")))))
            (tape (cl-remove-if #'string-empty-p
                                (split-string (format "_%s_" initial) "")))
-           (rate (string-to-number
-                  (turing-machine--get-value "; RATE:\\(.*\\)")))
+           (rate (let ((rate (turing-machine--get-value "RATE")))
+                   (cond ((= arg 16)
+                          (string-to-number
+                           (read-string "Set rate: ")))
+                         (rate (string-to-number rate))
+                         (t 0))))
            (place 1)
            (state "0")
            (key (list "0" (cadr tape)))
