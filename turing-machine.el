@@ -7,7 +7,7 @@
 ;; Created: 2017-05-04
 ;; Version: 0.1.4
 ;; Keywords: turing machine simulation
-;; Package-Requires: ((emacs "24.4") (cl-lib "0.6.1"))
+;; Package-Requires: ((emacs "24.4"))
 
 ;; This file is not part of GNU Emacs.
 
