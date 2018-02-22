@@ -24,7 +24,7 @@ class TuringMachine(object):
         self.wild_key = (self.state, "*")
 
     def parse_file(self, filename):
-        "Parse turing code from filename into a dict of commands."
+        """Parse turing code from filename into a dict of commands."""
         with open(filename) as f:
             lines = map(str.strip, f.read().splitlines())
             lines = [line for line in lines if not line.startswith(';')]
@@ -32,7 +32,7 @@ class TuringMachine(object):
             return dict([(tuple(i[:2]),tuple(i[2:])) for i in lines])
 
     def run(self):
-        "Run the turing machine."
+        """Run the turing machine."""
         while (self.key in self.commands
                or self.wild_key in self.commands
                and not self.key[0].startswith("halt")):
