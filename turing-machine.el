@@ -34,6 +34,7 @@
 
 ;;; Code:
 (require 'cl-lib)
+(eval-when-compile (require 'subr-x))
 
 (defvar turing-machine-mode-map
   (let ((map (make-sparse-keymap)))
